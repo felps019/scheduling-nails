@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "poppins";
+    src: url(/fonts/Poppins.woff2) format('woff2');
+    font-weight: 200;
+    font-style: italic
+  }
+}
+
+@layer base {
+  @font-face {
+    font-family: "playfairDisplaySC";
+    src: url(/fonts/PlayfairDisplaySC.woff2) format('woff2');
+    font-style: italic;
+  }
+}
+
+input:focus-within~label,
+input:not(:placeholder-shown)~label {
+  @apply transform scale-75 -translate-y-4 bg-custom-bg z-10 px-1;
+}
+
+input:focus-within~label {
+  @apply transform scale-75 -translate-y-4 text-custom-name bg-custom-bg z-10 px-1;
+}
+
+body {
+  background: #FFABAD;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #FFABAD inset !important;
+  width: 250px;
+}

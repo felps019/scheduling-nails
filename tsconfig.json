@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./src/*"],
+    },
+    "strict": true,
+    "esModuleInterop": true,  // Permite importacoes de modulos commonJS 
+    "allowSyntheticDefaultImports": true  // Permite que vc importe modulos que nao tem export padrao
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
