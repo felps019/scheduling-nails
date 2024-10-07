@@ -53,7 +53,7 @@ export function App() {
 
   console.log(errors);
 
-  const formSubmit = (data: any) => {
+  const formSubmit = (data: CreatedFormSchema) => {
     setOutput(JSON.stringify(data, null, 2));
   };
 
