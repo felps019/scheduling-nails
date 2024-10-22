@@ -5,8 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DateTimePicker } from './components/ui/date-time-picker/date-time-picker';
 import { today } from "@internationalized/date";
-
-// import PhoneInput from 'react-phone-number-input/input';
+import GoogleCalendar from './components/GoogleCalendar';
 
 const services = [
   { value: 'Alongamento em Fibra', label: 'Alongamento em Fibra' },
@@ -41,7 +40,16 @@ type CreatedFormSchema = z.infer<typeof createdFormSchema>;
 
 export function App() {
   const [output, setOutput] = React.useState('');
-  //Funcao utilizada para registrar os inputs
+  const [eventData, setEventData] = React.useState<{
+    summary: string;
+    description: string;
+    start: {
+      dateTime: string;
+    };
+    end: {
+      dateTime: string;
+    };
+  } | null>(null);  
   const {
     register,
     handleSubmit,
@@ -55,6 +63,19 @@ export function App() {
 
   const formSubmit = (data: CreatedFormSchema) => {
     setOutput(JSON.stringify(data, null, 2));
+
+    const eventCalendar = {
+      summary: data.name,
+      description: `Serviço agendado: ${data.works} - Telefone de contato: ${data.phone}`,
+      start: {
+        dateTime: data.date.toISOString(),
+      },
+      end: {
+        dateTime: new Date(data.date.getTime() + 60 * 60 * 1000).toISOString(), //Duracao de 1h
+      }
+    };
+    //Nesse setEventData ele vai atualizar os dados do evento conforme preenchido
+    setEventData(eventCalendar);
   };
 
   return (
@@ -165,6 +186,7 @@ export function App() {
 
         <div className="flex justify-center items-center">
           <button
+            type='submit'
             onClick={() => handleSubmit(formSubmit)()}
             className="font-playfairDisplaySC text-custom-title mx-auto w-32 h-7 mt-4 rounded-md bg-custom-name"
           >
@@ -173,6 +195,13 @@ export function App() {
         </div>
       </form>
       <pre>{output}</pre>
+
+      {eventData && <GoogleCalendar eventData={{
+        nome: eventData.summary,
+        telefone: eventData.description.includes('Telefone de contato: ') ? eventData.description.split('Telefone de contato: ')[1] : '',
+        servico: eventData.description.split(': ')[1].split(' - ')[0],
+        data: eventData.start.dateTime,
+      }} />}
     </>
   );
 };
