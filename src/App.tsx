@@ -1,11 +1,11 @@
 import React from 'react';
 import './index.css';
-import { date, z } from 'zod';
-import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DateTimePicker } from './components/ui/date-time-picker/date-time-picker';
 import { today } from "@internationalized/date";
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 import GoogleCalendar from './components/GoogleCalendar';
+import { DateTimePicker } from './components/ui/date-time-picker/date-time-picker';
 
 const services = [
   { value: 'Alongamento em Fibra', label: 'Alongamento em Fibra' },
@@ -33,7 +33,7 @@ const createdFormSchema = z.object({
   works: z.string().min(1, 'Selecione pelo menos um serviço').refine(value => value !== '0', {
     message: 'Selecione um serviço válido',
   }),
-  date: z.date({ message: 'A data é inválida' }).min(new Date(), 'A data e hora devem ser no futuro'),
+  date: z.date({ message: 'A data é inválida' }),
 });
 
 type CreatedFormSchema = z.infer<typeof createdFormSchema>;
@@ -170,11 +170,12 @@ export function App() {
             render={({ field: { onChange, onBlur } }) => (
               <DateTimePicker
                 granularity={"minute"}
-                //O instaceof é um operador para verificar se um objeto pertece a uma instancia de tal classe ou construtor
-                //Se for true retorna o objeto, caso contrário retorna null
-                onChange={(date) => date instanceof Date ? onChange(date) : onChange(new Date())}
+                onChange={(date) => {
+                  onChange(date.toDate('America/Sao_Paulo'))
+                }}
                 onBlur={onBlur}
                 minValue={today('America/Sao_Paulo')}
+                
               />
             )}
           />

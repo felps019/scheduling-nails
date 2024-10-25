@@ -1,9 +1,9 @@
 "use client"
-import { CalendarDate, isToday as _isToday, createCalendar, getLocalTimeZone, getWeeksInMonth } from "@internationalized/date";
+import  { type CalendarDate, isToday as _isToday, createCalendar, getLocalTimeZone, getWeeksInMonth } from "@internationalized/date";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import React, { useMemo } from "react";
-import { CalendarProps, DateValue, useButton, useCalendar, useCalendarCell, useCalendarGrid, useLocale } from "react-aria";
-import { CalendarState, useCalendarState } from "react-stately";
+import  { type CalendarProps, type DateValue, useButton, useCalendar, useCalendarCell, useCalendarGrid, useLocale } from "react-aria";
+import  { type CalendarState, useCalendarState } from "react-stately";
 import { cn } from "@/lib/utils";
 import { Button } from "../button";
 
@@ -28,7 +28,7 @@ function Calendar(props: CalendarProps<DateValue>) {
 		locale,
 		createCalendar,
 	});
-	const { calendarProps, prevButtonProps: _prevButtonProps, nextButtonProps: _nextButtonProps, title } = useCalendar(props, state);
+	const { calendarProps, prevButtonProps: _prevButtonProps, nextButtonProps: _nextButtonProps } = useCalendar(props, state);
 	const { buttonProps: prevButtonProps } = useButton(_prevButtonProps, prevButtonRef);
 	const { buttonProps: nextButtonProps } = useButton(_nextButtonProps, nextButtonRef);
 
@@ -73,7 +73,7 @@ function CalendarGrid({ state, ...props }: CalendarGridProps) {
 			<thead {...headerProps}>
 				<tr className="flex">
 					{weekDaysInPortuguese.map((day, index) => (
-						<th className="w-9 rounded-md text-[0.8rem] font-normal text-black" key={index}>
+						<th className="w-9 rounded-md text-[0.8rem] font-normal text-black" key={day}>
 							{day}
 						</th>
 					))}
@@ -82,7 +82,7 @@ function CalendarGrid({ state, ...props }: CalendarGridProps) {
 			<tbody>
 				{[...new Array(weeksInMonth).keys()].map((weekIndex) => (
 					<tr className="flex w-full mt-2" key={weekIndex}>
-						{state.getDatesInWeek(weekIndex).map((date, i) => (date ? <CalendarCell key={i} state={state} date={date} /> : <td key={i} />))}
+						{state.getDatesInWeek(weekIndex).map((date, i) => (date ? <CalendarCell key={date.day} state={state} date={date} /> : <td key={i}/>))}
 					</tr>
 				))}
 			</tbody>

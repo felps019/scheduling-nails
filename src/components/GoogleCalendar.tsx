@@ -29,10 +29,14 @@ interface GoogleCalendarEvent {
   }
 }
 
+interface TokenClient {
+  requestAccessToken: () => void;
+}
+
 console.log('gapi', gapi);
 const GoogleCalendar = ({ eventData } : GoogleCalendarProps)  => {
   const [gapiLoaded, setGapiLoaded] = useState(false);
-  const [tokenClient, setTokenClient] = useState<gapi.auth2.TokenClient | null>(null);
+  const [tokenClient, setTokenClient] = useState<TokenClient | null>(null);
 
   // Inicializa o cliente da API Google Calendar
   useEffect(() => {
@@ -49,6 +53,8 @@ const GoogleCalendar = ({ eventData } : GoogleCalendarProps)  => {
       });
     };
     console.log("gapi load chamado");
+    gapi.load('client', initClient);
+    
   const client = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
     scope: SCOPES,

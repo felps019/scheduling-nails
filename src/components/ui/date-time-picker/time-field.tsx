@@ -1,10 +1,15 @@
-"use client"
+"use client";
 
-import { DateSegment } from "./date-segment";
-import { useRef } from "react";
-import { AriaTimeFieldProps, TimeValue, useLocale, useTimeField } from "react-aria";
-import { useTimeFieldState } from "react-stately";
 import { cn } from "@/lib/utils";
+import { useRef } from "react";
+import {
+	type AriaTimeFieldProps,
+	type TimeValue,
+	useLocale,
+	useTimeField,
+} from "react-aria";
+import { useTimeFieldState } from "react-stately";
+import { DateSegment } from "./date-segment";
 
 function TimeField(props: AriaTimeFieldProps<TimeValue>) {
 	const ref = useRef<HTMLInputElement | null>(null);
@@ -13,19 +18,16 @@ function TimeField(props: AriaTimeFieldProps<TimeValue>) {
 		...props,
 		locale,
 	});
-	const {
-		fieldProps: { ...fieldProps },
-	} = useTimeField(props, state, ref);
 
+	const { fieldProps } = useTimeField(props, state, ref);
 	return (
-		<input type="time" id="timetable" name="timetable" required aria-label="Selecionar hora" {...fieldProps} ref={ref} className={cn("sm:w-32 sm:h-9 rounded-md border-custom-name bg-transparent px-4 py-1 text-sm focus-within:border-custom-name/70 focus-within:ring-0 focus-visible:outline-none focus-visible:ring-custom-name")}
-			{...state.validationState === "invalid" && (
-				<span aria-hidden="true" aria-label="invalid">🚫</span>
-			)}
-			{...state.segments.map((segment, i) => (
-				<DateSegment key={i} segment={segment} state={state} />
+		<div {...fieldProps} ref={ref} className="flex">
+			{state.segments.map((segment, i) => (
+				<DateSegment key={segment.type} segment={segment} state={state} />
 			))}
-		/>
+			{state.isInvalid &&
+				<span aria-hidden="true">🚫</span>}
+		</div>
 	);
 }
 

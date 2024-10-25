@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { useDateSegment } from "react-aria";
-import { DateFieldState, DateSegment as IDateSegment } from "react-stately";
+import type { DateFieldState, DateSegment as IDateSegment } from "react-stately";
 import { cn } from "@/lib/utils";
 
 interface DateSegmentProps {
@@ -26,7 +26,7 @@ function DateSegment({ segment, state }: DateSegmentProps) {
         segment.type !== "literal" ? "px-[1px]" : "",
         segment.isPlaceholder ? "text-black" : ""
       )}
-    >,
+    >
       {segment.text}
     </div>
   );

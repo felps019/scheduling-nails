@@ -1,18 +1,18 @@
 "use client";
 
+import { useForwardedRef } from "@/lib/useForwardedRef";
+import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import React, { useRef, useState } from "react";
 import {
-  DateValue,
+  type DateValue,
   useButton,
   useDatePicker,
   useInteractOutside,
 } from "react-aria";
-import { DatePickerStateOptions, useDatePickerState } from "react-stately";
-import { useForwardedRef } from "@/lib/useForwardedRef";
-import { cn } from "@/lib/utils";
-import { Button } from "../button";
+import { type DatePickerStateOptions, useDatePickerState } from "react-stately";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
+import { Button } from "../button";
 import { Calendar } from "./calendar";
 import { DateField } from "./date-field";
 import { TimeField } from "./time-field";
@@ -26,7 +26,6 @@ const DateTimePicker = React.forwardRef<
   const contentRef = useRef<HTMLDivElement | null>(null);
 
   const [open, setOpen] = useState(false);
-
   const state = useDatePickerState(props);
   const {
     groupProps,
@@ -34,7 +33,6 @@ const DateTimePicker = React.forwardRef<
     buttonProps: _buttonProps,
     dialogProps,
     calendarProps,
-
   } = useDatePicker(props, state, ref);
   const { buttonProps } = useButton(_buttonProps, buttonRef);
 
@@ -42,7 +40,6 @@ const DateTimePicker = React.forwardRef<
     ref: contentRef,
     onInteractOutside: () => setOpen(false),
   });
-
 
   return (
     <div
@@ -69,11 +66,12 @@ const DateTimePicker = React.forwardRef<
           </Button>
         </PopoverTrigger>
         {state.hasTime && (
-          <TimeField
+          <TimeField 
             id="time-field"
             aria-label="Selecionar hora"
             value={state.timeValue}
             onChange={state.setTimeValue}
+            hourCycle={24}
           />
         )}
         <PopoverContent ref={contentRef} className="w-full">
