@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { gapi } from 'gapi-script';
 
+
 const CLIENT_ID = '92829381767-03900eohrndmc1dimc3sca6aq627mebf.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyANS__6Y5cNs-uBbe2XMZgNBLo958qcdZI';
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
@@ -14,7 +15,7 @@ interface EventData {
 }
 
 interface GoogleCalendarProps {
-  eventData: EventData;
+  eventData: EventData | null;
 }
 
 interface GoogleCalendarEvent {
@@ -70,6 +71,7 @@ const GoogleCalendar = ({ eventData } : GoogleCalendarProps)  => {
 
   // Função para criar evento no Google Calendar
   const createEvent = async (accessToken: string) => {
+    if(!eventData) return null;
       const event = {
         summary: eventData.nome,
         description: `${eventData.servico}${eventData.telefone ? ` - ${eventData.telefone}` : ''}`,
@@ -106,9 +108,13 @@ const GoogleCalendar = ({ eventData } : GoogleCalendarProps)  => {
   return (
     <div className='flex justify-center items-center'>
       {gapiLoaded ? (
-        <button type='button' className='bg-black w-100 h-40 text-white' onClick={handleAuthClick}>Criar Evento no Google Calendar</button>
+        <button type='button' onClick={() => handleAuthClick()}
+      className='font-playfairDisplaySC text-custom-title mx-auto w-56 h-11 mt-4 rounded-md bg-custom-name'
+      >
+        Autenticar com Google
+      </button>
       ) : (
-        <p>Carregando Google Calendar...</p>
+        <p>Carregando...</p>
       )}
     </div>
   );

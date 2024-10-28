@@ -5,7 +5,7 @@ import React, { useMemo } from "react";
 import  { type CalendarProps, type DateValue, useButton, useCalendar, useCalendarCell, useCalendarGrid, useLocale } from "react-aria";
 import  { type CalendarState, useCalendarState } from "react-stately";
 import { cn } from "@/lib/utils";
-import { Button } from "../button";
+import { Button } from "../buttonCalendar";
 
 const getPortugueseMonthTitle = (date: CalendarDate) => {
 	const monthNames = [
