@@ -43,14 +43,10 @@ export type CreatedFormSchema = z.infer<typeof createdFormSchema>;
 export function App() {
   const [buttonSubmit, setButtonSubmit] = React.useState(false);
   const [eventData, setEventData] = React.useState<{
-    summary: string;
-    description: string;
-    start: {
-      dateTime: string;
-    };
-    end: {
-      dateTime: string;
-    };
+    nome: string;
+    telefone: string;
+    servico: string;
+    data: string;
   } | null>(null);  
   const {
     register,
@@ -62,15 +58,12 @@ export function App() {
   });
 
   const formSubmit = (data: CreatedFormSchema) => {
+    console.log('Dados do formulário', data)
     const eventCalendar = {
-      summary: data.name,
-      description: `Serviço agendado: ${data.works} - Telefone de contato: ${data.phone}`,
-      start: {
-        dateTime: data.date.toISOString(),
-      },
-      end: {
-        dateTime: new Date(data.date.getTime() + 60 * 60 * 1000).toISOString(), //Duracao de 1h
-      }
+      nome: data.name,
+      telefone: data.phone,
+      servico: data.works,
+      data: data.date.toISOString(),
     };
     //Nesse setEventData ele vai atualizar os dados do evento conforme preenchido
     setEventData(eventCalendar);
@@ -83,18 +76,15 @@ export function App() {
       <form onSubmit={handleSubmit(formSubmit)} className="flex flex-col gap-4 p-4 sm:w-full sm:max-w-4xl mx-auto">
         {/* Campo de nome */}
           <Input id='name' type='text' label='Nome' placeholder='' register={register} icon='../public/contact.png' error={errors.name} />
-
         {/* Campo de telefone */}
          <Input id='phone' type='tel' label='Telefone' placeholder='' register={register} icon='../public/phone.png' error={errors.phone}/>
-
         {/* Campo de Serviços */}
         <Select id='works' services={services} register={register} icon='../public/work.png' error={errors.works}/>
-
         <DateTime control={control} error={errors.date}/>
 
         {buttonSubmit ? (
           eventData && (
-            <GoogleCalendar eventData={eventData} handleSubmit={handleSubmit} formSubmit={formSubmit} />
+            <GoogleCalendar eventData={eventData} />
           )
         ) : (
           <button type='submit' className='font-playfairDisplaySC text-custom-title text-lg mx-auto w-40 h-10 mt-4 rounded-md bg-custom-name'>
