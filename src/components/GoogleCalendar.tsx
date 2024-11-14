@@ -11,6 +11,7 @@ interface EventData {
     telefone: string;
     servico: string;
     data: string;
+    dataFim: string
 }
 
 interface GoogleCalendarProps {
@@ -24,7 +25,7 @@ interface TokenClient {
 const GoogleCalendar = ({ eventData }: GoogleCalendarProps) => {
   const [gapiLoaded, setGapiLoaded] = useState(false);
   const [tokenClient, setTokenClient] = useState<TokenClient | null>(null);
-
+  
   useEffect(() => {
     const initClient = () => {
       gapi.client.init({
@@ -57,18 +58,16 @@ const GoogleCalendar = ({ eventData }: GoogleCalendarProps) => {
       return;
     }
 
-    const startDateTime = new Date(eventData.data);
-    const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000); // Duracao de 1 hora
 
     const event = {
       summary: eventData.nome,
       description: `${eventData.servico}${eventData.telefone ? ` - ${eventData.telefone}` : ''}`,
       start: {
-        dateTime: startDateTime.toISOString(),
+        dateTime: eventData.data,
         timeZone: 'America/Sao_Paulo',
       },
       end: {
-        dateTime: endDateTime.toISOString(),
+        dateTime: eventData.dataFim,
         timeZone: 'America/Sao_Paulo',
       },
     };

@@ -8,6 +8,8 @@ import Header from './components/Header';
 import Input from './components/Input';
 import Select from './components/Select';
 import DateTime from './components/DateTime';
+import { parseAbsolute } from '@internationalized/date';
+
 
 const services = [
   { value: 'Alongamento em Fibra', label: 'Alongamento em Fibra' },
@@ -35,6 +37,7 @@ const createdFormSchema = z.object({
   works: z.string().min(1, 'Selecione pelo menos um serviço').refine(value => value !== '0', {
     message: 'Selecione um serviço válido',
   }),
+  duration: z.string().transform((value) => Number(value)),
   date: z.date({ message: 'A data é inválida' }),
 });
 
@@ -47,23 +50,25 @@ export function App() {
     telefone: string;
     servico: string;
     data: string;
+    dataFim: string
   } | null>(null);  
   const {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<CreatedFormSchema>({
     resolver: zodResolver(createdFormSchema),
   });
 
   const formSubmit = (data: CreatedFormSchema) => {
-    console.log('Dados do formulário', data)
     const eventCalendar = {
       nome: data.name,
       telefone: data.phone,
       servico: data.works,
       data: data.date.toISOString(),
+      dataFim: parseAbsolute(data.date.toISOString(), 'America/Sao_Paulo').add({ minutes: Number(data.duration)}).toDate().toISOString()
     };
     //Nesse setEventData ele vai atualizar os dados do evento conforme preenchido
     setEventData(eventCalendar);
@@ -80,8 +85,10 @@ export function App() {
          <Input id='phone' type='tel' label='Telefone' placeholder='' register={register} icon='../public/phone.png' error={errors.phone}/>
         {/* Campo de Serviços */}
         <Select id='works' services={services} register={register} icon='../public/work.png' error={errors.works}/>
+        <Input id='duration' type='number' label='Duração (em minutos)' placeholder='' register={register} icon='../public/phone.png' error={errors.phone}/>
         <DateTime control={control} error={errors.date}/>
-
+        <pre>{JSON.stringify(errors, null, 2)}</pre>
+        <pre>{JSON.stringify(watch(), null, 2)}</pre>
         {buttonSubmit ? (
           eventData && (
             <GoogleCalendar eventData={eventData} />
