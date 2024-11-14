@@ -20,6 +20,7 @@ const DateTime = ({control, error}: DateTimeFieldProps) => {
             render={({ field: { onChange, onBlur } }) => (
               <DateTimePicker
                 granularity={"minute"}
+                control={control}
                 onChange={(date) => {
                   onChange(date.toDate('America/Sao_Paulo'))
                 }}
