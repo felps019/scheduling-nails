@@ -1,15 +1,22 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "jsx": "react-jsx",
+    "target": "ES2022", // Alvo: recursos do ECMAScript 2022
+    "module": "ESNext", // Usar o módulo ESNext para suportar ESM no Vite
+    "jsx": "react-jsx", // Suporte a React com a nova transform JSX
+    "moduleResolution": "Node", // Resolve os módulos no estilo Node.js
+    "strict": true, // Habilita todas as verificações estritas
+    "esModuleInterop": true, // Permite interoperabilidade entre módulos CommonJS e ESModules
+    "allowSyntheticDefaultImports": true, // Permite importar módulos sem exportação padrão
+    "forceConsistentCasingInFileNames": true, // Garante consistência de nomes de arquivo
+    "skipLibCheck": true, // Ignora a verificação de tipo em arquivos de definição
+    "resolveJsonModule": true, // Permite a importação de arquivos JSON
+    "isolatedModules": true, // Requer que cada arquivo seja tratado como um módulo isolado (necessário para o Vite)
+    "baseUrl": ".", // Define o diretório base para resolução de paths
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"] // Alias para simplificar imports
     },
-    "strict": true,
-    "esModuleInterop": true,  // Permite importacoes de modulos commonJS 
-    "allowSyntheticDefaultImports": true  // Permite que vc importe modulos que nao tem export padrao
+    "lib": ["DOM", "DOM.Iterable", "ESNext"] // Inclui bibliotecas modernas do DOM e ECMAScript
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*"], // Inclui todos os arquivos TypeScript na pasta src
+  "exclude": ["node_modules", "dist"] // Exclui node_modules e a pasta de build
 }

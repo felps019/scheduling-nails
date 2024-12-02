@@ -56,7 +56,6 @@ export function App() {
     register,
     handleSubmit,
     control,
-    watch,
     formState: { errors },
   } = useForm<CreatedFormSchema>({
     resolver: zodResolver(createdFormSchema),
@@ -87,8 +86,6 @@ export function App() {
         <Select id='works' services={services} register={register} icon='../public/work.png' error={errors.works}/>
         <Input id='duration' type='number' label='Duração (em minutos)' placeholder='' register={register} icon='../public/phone.png' error={errors.phone}/>
         <DateTime control={control} error={errors.date}/>
-        <pre>{JSON.stringify(errors, null, 2)}</pre>
-        <pre>{JSON.stringify(watch(), null, 2)}</pre>
         {buttonSubmit ? (
           eventData && (
             <GoogleCalendar eventData={eventData} />
