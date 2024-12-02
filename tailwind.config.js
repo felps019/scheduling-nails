@@ -1,9 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
+
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    screens: {
+      'mobile-m': '320px',
+      'mobile': '425px',
+      'tablet': '768px',
+      'laptop': '1024px',
+      'desktop': '1440px'
+    },
     extend: {
       fontFamily: {
         poppins: ['Poppins'],
@@ -14,7 +22,6 @@ export default {
         'custom-title': '#F2F2F2',
         'custom-black': '#504848',
         'custom-bg': '#FFABAD',
-        'custom-teste': '#F0F0F0',
       },
       transformOrigin: {
         0: '0%',

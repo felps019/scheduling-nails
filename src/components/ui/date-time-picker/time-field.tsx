@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useRef } from "react";
 import {
 	type AriaTimeFieldProps,
@@ -21,8 +20,8 @@ function TimeField(props: AriaTimeFieldProps<TimeValue>) {
 
 	const { fieldProps } = useTimeField(props, state, ref);
 	return (
-		<div {...fieldProps} ref={ref} className="flex">
-			{state.segments.map((segment, i) => (
+		<div {...fieldProps} ref={ref} className="flex p-2">
+			{state.segments.map((segment) => (
 				<DateSegment key={segment.type} segment={segment} state={state} />
 			))}
 			{state.isInvalid &&

@@ -29,8 +29,7 @@ const createdFormSchema = z.object({
     }).join(' ')
   }),
   phone: z.string()
-    .min(11, 'O número deve ter pelo menos 11 dígitos')
-    .regex(/^\(\d{2}\) \d{4,5}-\d{4}$/, 'O número é inválido'),
+  .regex(/^\d{2}\d{4,5}\d{4}$/, 'O número é inválido'),
   //O superRefine retorna os dados de todos os campos
   //O refine é uma forma de validar algo em especifico atraves de uma logica que nao exista no zod
   //O refine espera ser um valor que retorne true ou false
@@ -77,14 +76,14 @@ export function App() {
   return (
     <>
       <Header />
-      <form onSubmit={handleSubmit(formSubmit)} className="flex flex-col gap-4 p-4 sm:w-full sm:max-w-4xl mx-auto">
+      <form onSubmit={handleSubmit(formSubmit)} className="flex flex-col gap-4 p-4 mobile-m:p-2">
         {/* Campo de nome */}
           <Input id='name' type='text' label='Nome' placeholder='' register={register} icon='../public/contact.png' error={errors.name} />
         {/* Campo de telefone */}
-         <Input id='phone' type='tel' label='Telefone' placeholder='' register={register} icon='../public/phone.png' error={errors.phone}/>
+         <Input id='phone' type='tel' label='Phone' placeholder='' register={register} icon='../public/phone.png' error={errors.phone}/>
         {/* Campo de Serviços */}
         <Select id='works' services={services} register={register} icon='../public/work.png' error={errors.works}/>
-        <Input id='duration' type='number' label='Duração (em minutos)' placeholder='' register={register} icon='../public/phone.png' error={errors.phone}/>
+        <Input id='duration' type='number' label='Duração' placeholder='' register={register} icon='../public/timer.png' error={errors.phone}/>
         <DateTime control={control} error={errors.date}/>
         {buttonSubmit ? (
           eventData && (

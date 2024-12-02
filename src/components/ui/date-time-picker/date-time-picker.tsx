@@ -48,7 +48,7 @@ const DateTimePicker = React.forwardRef<
       aria-label="Horário"
       className={cn(
         groupProps.className,
-        "flex items-center divide-x-2 m-auto sm:w-72 sm:h-9 border-4 rounded-md text-custom-black border-custom-name focus-within:border-custom-name/70 mt-2"
+        "flex items-center divide-x-2 divide-custom-name m-auto mobile:w-72 mobile:h-10 mobile-m:w-[17rem] mobile-m:h-9 mobile-m:mt-3 border-4 rounded-md text-custom-black border-custom-name focus-within:border-custom-name/70 mt-2"
       )}
     >
       <DateField id="date-field" {...fieldProps} />
