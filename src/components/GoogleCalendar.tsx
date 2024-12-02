@@ -1,111 +1,103 @@
-import { useState, useEffect } from 'react';
-import { gapi } from 'gapi-script';
+import { useState } from "react";
 
-const CLIENT_ID = '92829381767-03900eohrndmc1dimc3sca6aq627mebf.apps.googleusercontent.com';
-const API_KEY = 'AIzaSyANS__6Y5cNs-uBbe2XMZgNBLo958qcdZI';
-const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-const SCOPES = 'https://www.googleapis.com/auth/calendar.events';
+export const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+export const SCOPES = import.meta.env.VITE_SCOPES;
 
 interface EventData {
-    nome: string;
-    telefone: string;
-    servico: string;
-    data: string;
-    dataFim: string
+	nome: string;
+	telefone: string;
+	servico: string;
+	data: string;
+	dataFim: string;
 }
 
 interface GoogleCalendarProps {
-  eventData: EventData;
-}
-
-interface TokenClient {
-  requestAccessToken: () => void;
+	eventData: EventData;
 }
 
 const GoogleCalendar = ({ eventData }: GoogleCalendarProps) => {
-  const [gapiLoaded, setGapiLoaded] = useState(false);
-  const [tokenClient, setTokenClient] = useState<TokenClient | null>(null);
-  
-  useEffect(() => {
-    const initClient = () => {
-      gapi.client.init({
-        apiKey: API_KEY,
-        discoveryDocs: [DISCOVERY_DOC],
-      }).then(() => {
-        setGapiLoaded(true);
-      }).catch((error: Error) => {
-        console.error("Error loading google api client", error);
-      });
-    };
-    
-    gapi.load('client', initClient);
-    
-    const client = google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID,
-      scope: SCOPES,
-      callback: (response: gapi.auth2.AuthResponse) => {
-        if (response.access_token) {
-          createEvent(response.access_token);
-        }
-      }
-    });
-    setTokenClient(client);
-  }, []);
+	const [accessToken, setAccessToken] = useState<string | null>(null);
 
-  const createEvent = async (accessToken: string) => {
-    if (!eventData || !eventData.data) {
-      console.error("Data inválida no campo 'data' em eventData");
-      return;
-    }
+	const handleAuthClick = () => {
+		if (
+			typeof google === "undefined" ||
+			!google.accounts ||
+			!google.accounts.oauth2
+		) {
+			console.error("Google Identity Services SDK não está carregado.");
+			return;
+		}
 
+		const client = google.accounts.oauth2.initTokenClient({
+			client_id: CLIENT_ID,
+			scope: SCOPES,
+			callback: (response) => {
+				if (response.access_token) {
+					setAccessToken(response.access_token);
+					createEvent(response.access_token);
+				} else {
+					console.error("Falha ao obter o token de acesso", response);
+				}
+			},
+		});
 
-    const event = {
-      summary: eventData.nome,
-      description: `${eventData.servico}${eventData.telefone ? ` - ${eventData.telefone}` : ''}`,
-      start: {
-        dateTime: eventData.data,
-        timeZone: 'America/Sao_Paulo',
-      },
-      end: {
-        dateTime: eventData.dataFim,
-        timeZone: 'America/Sao_Paulo',
-      },
-    };
+		client.requestAccessToken();
+	};
 
-    try {
-      const request = gapi.client.calendar.events.insert({
-        calendarId: 'primary',
-        resource: event,
-      });
-      request.execute((event) => {
-        if (event?.htmlLink) {
-          alert(`Evento criado: ${event.htmlLink}`);
-        } else {
-          console.error("Erro ao criar evento, resposta inválida", event);
-        }
-      });
-    } catch (error) {
-      console.error("Erro ao criar evento no Google Calendar", error);
-    }
-  };
+	const createEvent = async (token: string) => {
+		if (!eventData || !eventData.data) {
+			console.error("Data inválida no campo 'data' em eventData");
+			return;
+		}
 
-  const handleAuthClick = () => {
-    if (tokenClient) {
-      tokenClient.requestAccessToken();
-    }
-  }
+		const event = {
+			summary: eventData.nome,
+			description: `${eventData.servico}${eventData.telefone ? ` - ${eventData.telefone}` : ""}`,
+			start: {
+				dateTime: eventData.data,
+				timeZone: "America/Sao_Paulo",
+			},
+			end: {
+				dateTime: eventData.dataFim,
+				timeZone: "America/Sao_Paulo",
+			},
+		};
 
-  return (
-    <div className='flex justify-center items-center'>
-      {gapiLoaded ? (
-        <button type='button' onClick={handleAuthClick} className='font-playfairDisplaySC text-custom-title mx-auto w-56 h-11 mt-4 rounded-md bg-custom-name'>
-          Autenticar com Google
-        </button>
-      ) : (
-        <p>Carregando...</p>
-      )}
-    </div>
-  );
+		try {
+			const response = await fetch(
+				"https://www.googleapis.com/calendar/v3/calendars/primary/events",
+				{
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(event),
+				},
+			);
+
+			const result = await response.json();
+			if (result.htmlLink) {
+				alert(`Evento criado: ${result.htmlLink}`);
+			} else {
+				console.error("Erro ao criar evento, resposta inválida", result);
+			}
+		} catch (error) {
+			console.error("Erro ao criar evento no Google Calendar", error);
+		}
+	};
+
+	return (
+		<div className="flex justify-center items-center">
+			<button
+				type="button"
+				onClick={handleAuthClick}
+				className="font-playfairDisplaySC text-custom-title mx-auto w-56 h-11 mt-4 rounded-md bg-custom-name"
+			>
+				Autenticar com Google
+			</button>
+		</div>
+	);
 };
 
 export default GoogleCalendar;
