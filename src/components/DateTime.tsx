@@ -11,7 +11,7 @@ interface DateTimeFieldProps {
 const DateTime = ({ control, error }: DateTimeFieldProps) => {
 	return (
 		<>
-			<main className="mt-2">
+			<main>
 				{/* O controller é utilizado para registrar as entradas de uma lib externa e a integração entre as libs */}
 				<Controller
 					name="date"

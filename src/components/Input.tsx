@@ -23,7 +23,7 @@ const Input = ({
 }: InputProps) => {
 	return (
 		<>
-			<div className="relative m-auto sm:w-72 sm:h-9 border-4 rounded-md text-custom-black border-custom-name focus-within:border-custom-name/70">
+			<div className="relative m-auto mobile:w-72 mobile:h-9 mobile:mt-3 mobile-m:w-[17rem] mobile-m:h-9 mobile-m:mt-3 border-4 rounded-md text-custom-black border-custom-name focus-within:border-custom-name/70">
 				<img
 					src={icon}
 					alt={label}
@@ -41,7 +41,7 @@ const Input = ({
 				{error && <p className="text-red-500 mt-1.5">{error.message}</p>}
 				<label
 					htmlFor={label}
-					className="absolute text-base font-medium text-custom-black top-0 -z-1 duration-300 origin-0 pl-9 mt-0.5"
+					className="absolute text-base font-medium text-custom-black top-0 -z-1 duration-300 origin-0 pl-9 mt-0.5 mobile:pl-12"
 				>
 					{label}
 				</label>
